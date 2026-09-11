@@ -1,0 +1,43 @@
+@import "tailwindcss";
+
+@layer utilities {
+  /* Marquee Kiri (untuk Logo Klien) */
+  @keyframes marquee {
+    0% {
+      transform: translateX(0%);
+    }
+    100% {
+      transform: translateX(-50%);
+    }
+  }
+
+  .animate-marquee {
+    display: flex;
+    width: max-content;
+    animation: marquee 25s linear infinite;
+  }
+
+  .animate-marquee:hover {
+    animation-play-state: paused;
+  }
+
+  /* Marquee Kanan (untuk Galeri Portofolio 7 Foto) */
+  @keyframes marquee-right {
+    0% {
+      transform: translateX(-50%);
+    }
+    100% {
+      transform: translateX(0%);
+    }
+  }
+
+  .animate-marquee-right {
+    display: flex;
+    width: max-content;
+    animation: marquee-right 35s linear infinite;
+  }
+
+  .animate-marquee-right:hover {
+    animation-play-state: paused;
+  }
+}
