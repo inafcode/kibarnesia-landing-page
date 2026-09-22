@@ -12,6 +12,34 @@ export default function ContactSection() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+
+    // 1. Tentukan nomor WA Admin Kibarnesia
+    // PASTIKAN menggunakan kode negara (62) tanpa tanda plus (+) atau angka 0 di depan.
+const nomorWhatsAppTujuan = "6288210131313";
+
+    // 2. Buat template pesan yang rapi (menggunakan template literal/backtick ` `)
+    const templatePesan = `Halo Tim Kibarnesia, 
+Saya ingin berkonsultasi mengenai program pengembangan SDM. 
+
+Berikut adalah data diri saya:
+- *Nama Lengkap:* ${formData.fullName}
+- *Nama Perusahaan:* ${formData.companyName}
+- *No. WhatsApp:* ${formData.whatsapp}
+- *Estimasi Peserta:* ${formData.participants}
+- *Program Diminati:* ${formData.program}
+
+Mohon informasi lebih lanjut. Terima kasih.`;
+
+    // 3. Ubah teks pesan menjadi format yang terbaca oleh URL browser
+    const pesanEncoded = encodeURIComponent(templatePesan);
+
+    // 4. Buat Link WhatsApp
+    const linkWhatsApp = `https://wa.me/${nomorWhatsAppTujuan}?text=${pesanEncoded}`;
+
+    // 5. Buka tab baru yang mengarah langsung ke WhatsApp
+    window.open(linkWhatsApp, '_blank');
+
+    // 6. Tetap jalankan animasi sukses di form website
     setSubmitted(true);
     setTimeout(() => {
       setSubmitted(false);

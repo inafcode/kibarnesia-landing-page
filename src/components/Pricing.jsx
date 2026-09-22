@@ -135,7 +135,7 @@ export default function Pricing() {
 
               {/* Tombol Minta Estimasi */}
               <a
-                href="#konsultasi"
+                href="https://wa.me/6288210131313"
                 className={`w-full py-3 rounded-full text-center text-xs sm:text-sm font-semibold transition-all duration-200 ${
                   plan.isPopular
                     ? 'bg-orange-500 hover:bg-orange-600 text-white shadow-lg shadow-orange-500/25'

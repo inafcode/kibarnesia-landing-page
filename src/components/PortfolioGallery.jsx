@@ -1,56 +1,14 @@
 import React, { useState, useEffect, useRef } from 'react';
-
-// Koleksi 7 foto dokumentasi pelatihan sesuai tema desain
-const photos = [
-  {
-    id: 1,
-    title: 'Financial & Corporate Briefing',
-    category: 'Executive In-House',
-    url: 'https://images.unsplash.com/photo-1557804506-669a67965ba0?auto=format&fit=crop&w=900&q=80',
-  },
-  {
-    id: 2,
-    title: 'Product Leadership Summit',
-    category: 'Keynote & Conference',
-    url: 'https://images.unsplash.com/photo-1540575467063-178a50c2df87?auto=format&fit=crop&w=900&q=80',
-  },
-  {
-    id: 3,
-    title: 'Organizational Stage Talk',
-    category: 'Culture & Motivation',
-    url: 'https://images.unsplash.com/photo-1475721027785-f74eccf877e2?auto=format&fit=crop&w=900&q=80',
-  },
-  {
-    id: 4,
-    title: 'Interactive Case Study Workshop',
-    category: 'Supervisory Training',
-    url: 'https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?auto=format&fit=crop&w=900&q=80',
-  },
-  {
-    id: 5,
-    title: 'Cross-Department Alignment',
-    category: 'Team Building',
-    url: 'https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=900&q=80',
-  },
-  {
-    id: 6,
-    title: 'Focus Group Discussion & Strategy',
-    category: 'Strategic Planning',
-    url: 'https://images.unsplash.com/photo-1531497865144-0464ef8fb9a9?auto=format&fit=crop&w=900&q=80',
-  },
-  {
-    id: 7,
-    title: 'Official Certification Handover',
-    category: 'Closing & Awarding',
-    url: 'https://images.unsplash.com/photo-1511578314322-379afb476865?auto=format&fit=crop&w=900&q=80',
-  },
-];
+// 1. Mengimpor data dari folder terpusat src/data/
+import { portfolioPhotos } from '../data/portofolioData';
 
 export default function PortfolioGallery() {
   const [activeIndex, setActiveIndex] = useState(1);
   const [isPaused, setIsPaused] = useState(false);
   const timerRef = useRef(null);
 
+  // Menggunakan data terpusat
+  const photos = portfolioPhotos;
   const total = photos.length;
 
   const nextSlide = () => {
@@ -61,8 +19,7 @@ export default function PortfolioGallery() {
     setActiveIndex((prev) => (prev - 1 + total) % total);
   };
 
-  // Autoplay loop: Berjalan otomatis setiap 3.2 detik
-  // Jeda otomatis jika kursor berada di atas galeri
+  // Autoplay geser otomatis tiap 3.2 detik (jeda saat hover)
   useEffect(() => {
     if (isPaused) {
       if (timerRef.current) clearInterval(timerRef.current);
@@ -78,7 +35,7 @@ export default function PortfolioGallery() {
     };
   }, [isPaused, activeIndex]);
 
-  // Kalkulasi posisi relatif setiap kartu terhadap foto yang sedang aktif
+  // Hitung posisi relatif kartu terhadap kartu yang sedang aktif
   const getOffset = (index) => {
     let diff = index - activeIndex;
     if (diff > total / 2) diff -= total;
@@ -105,7 +62,7 @@ export default function PortfolioGallery() {
           </p>
         </div>
 
-        {/* Stage Slider: Seluruh kartu bergeser secara fisik dengan CSS transform */}
+        {/* Stage Slider 3D */}
         <div className="relative h-[440px] sm:h-[480px] lg:h-[530px] w-full max-w-5xl mx-auto flex items-center justify-center">
           {photos.map((photo, index) => {
             const offset = getOffset(index);
@@ -113,38 +70,32 @@ export default function PortfolioGallery() {
             const isLeft = offset === -1;
             const isRight = offset === 1;
 
-            // Pengaturan posisi dan transformasi geser fisik
             let transformClass = '';
             let opacityClass = '';
             let zIndex = 0;
             let pointerEvents = 'pointer-events-none';
 
             if (isCenter) {
-              // Posisi Tengah (Aktif)
               transformClass = 'translate-x-0 scale-100';
               opacityClass = 'opacity-100';
               zIndex = 30;
               pointerEvents = 'pointer-events-auto';
             } else if (isLeft) {
-              // Posisi Kiri
               transformClass = '-translate-x-[75%] sm:-translate-x-[85%] lg:-translate-x-[92%] scale-[0.82]';
               opacityClass = 'opacity-70 hover:opacity-95';
               zIndex = 20;
               pointerEvents = 'pointer-events-auto cursor-pointer';
             } else if (isRight) {
-              // Posisi Kanan
               transformClass = 'translate-x-[75%] sm:translate-x-[85%] lg:translate-x-[92%] scale-[0.82]';
               opacityClass = 'opacity-70 hover:opacity-95';
               zIndex = 20;
               pointerEvents = 'pointer-events-auto cursor-pointer';
             } else if (offset < -1) {
-              // Di luar layar sisi kiri
-              transformClass = '-translate-x-[150%] scale-70';
+              transformClass = '-translate-x-[150%] scale-[0.7]';
               opacityClass = 'opacity-0';
               zIndex = 10;
             } else {
-              // Di luar layar sisi kanan
-              transformClass = 'translate-x-[150%] scale-70';
+              transformClass = 'translate-x-[150%] scale-[0.7]';
               opacityClass = 'opacity-0';
               zIndex = 10;
             }
@@ -157,7 +108,7 @@ export default function PortfolioGallery() {
                   if (isRight) nextSlide();
                 }}
                 style={{ zIndex }}
-                className={`absolute top-0 bottom-0 m-auto w-[82vw] sm:w-[360px] lg:w-[410px] h-[380px] sm:h-[440px] lg:h-[490px] rounded-3xl overflow-hidden shadow-2xl transition-all duration-700 ease- ${transformClass} ${opacityClass} ${pointerEvents}`}
+                className={`absolute top-0 bottom-0 m-auto w-[82vw] sm:w-[360px] lg:w-[410px] h-[380px] sm:h-[440px] lg:h-[490px] rounded-3xl overflow-hidden shadow-2xl transition-all duration-700 ease-in-out ${transformClass} ${opacityClass} ${pointerEvents}`}
               >
                 <div className="relative w-full h-full bg-slate-200">
                   <img
@@ -166,12 +117,12 @@ export default function PortfolioGallery() {
                     className="w-full h-full object-cover object-center"
                   />
 
-                  {/* Efek Dark Backdrop pada kartu samping */}
+                  {/* Backdrop Gelap untuk Foto Samping */}
                   {!isCenter && (
                     <div className="absolute inset-0 bg-slate-950/25 transition-colors" />
                   )}
 
-                  {/* Keterangan Teks pada kartu tengah */}
+                  {/* Keterangan Teks Foto Tengah */}
                   {isCenter && (
                     <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-transparent to-transparent flex flex-col justify-end p-6 sm:p-8">
                       <span className="text-orange-400 text-xs font-semibold uppercase tracking-wider mb-1">
@@ -188,10 +139,11 @@ export default function PortfolioGallery() {
           })}
         </div>
 
-        {/* Tombol Geser Navigasi Bawah & Indikator 7 Titik */}
+        {/* Tombol Geser Navigasi Bawah & 7 Titik */}
         <div className="flex items-center justify-center gap-6 mt-8 sm:mt-12">
-          {/* Tombol Panah Kiri */}
+          {/* Tombol Kiri */}
           <button
+            type="button"
             onClick={prevSlide}
             aria-label="Foto Sebelumnya"
             className="w-10 h-10 rounded-full bg-white border border-slate-200 shadow-sm flex items-center justify-center text-slate-700 hover:bg-orange-500 hover:text-white hover:border-orange-500 transition-all cursor-pointer active:scale-95"
@@ -201,11 +153,12 @@ export default function PortfolioGallery() {
             </svg>
           </button>
 
-          {/* 7 Titik Indikator Foto */}
+          {/* 7 Titik Indikator */}
           <div className="flex items-center gap-2">
             {photos.map((_, idx) => (
               <button
                 key={idx}
+                type="button"
                 onClick={() => setActiveIndex(idx)}
                 aria-label={`Lihat foto ke-${idx + 1}`}
                 className={`transition-all duration-300 rounded-full cursor-pointer ${
@@ -217,8 +170,9 @@ export default function PortfolioGallery() {
             ))}
           </div>
 
-          {/* Tombol Panah Kanan */}
+          {/* Tombol Kanan */}
           <button
+            type="button"
             onClick={nextSlide}
             aria-label="Foto Berikutnya"
             className="w-10 h-10 rounded-full bg-white border border-slate-200 shadow-sm flex items-center justify-center text-slate-700 hover:bg-orange-500 hover:text-white hover:border-orange-500 transition-all cursor-pointer active:scale-95"
